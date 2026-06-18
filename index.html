@@ -389,6 +389,18 @@
       padding-left: 2px;
     }
 
+    .field-error {
+      display: none;
+      font-size: 0.78rem;
+      color: #C0392B;
+      margin-top: 5px;
+      padding-left: 2px;
+    }
+    .form-group input.invalid {
+      border-color: #E08A7E;
+      background: #FDF3F1;
+    }
+
     .submit-btn .spinner {
       display: none;
       width: 20px;
@@ -615,17 +627,20 @@
         <div class="form-group">
           <label>Full Name</label>
           <input type="text" name="Name" required placeholder="Your name" autocomplete="name">
+          <span class="field-error" id="name-error">Please enter your name</span>
         </div>
 
         <div class="form-group">
           <label>Email <span class="opt">(optional, for reminder)</span></label>
           <input type="email" name="Email" placeholder="you@email.com" autocomplete="email">
+          <span class="field-error" id="email-error">Please enter a valid email address</span>
         </div>
 
         <div class="form-group">
           <label>Phone / WhatsApp</label>
           <input type="tel" name="Phone" required placeholder="(555) 123-4567" autocomplete="tel">
           <span class="field-hint" id="phone-hint">We'll send reminders via WhatsApp</span>
+          <span class="field-error" id="phone-error">Enter a 10-digit US number, no +1 or country code</span>
         </div>
 
         <div class="attend-only hidden" id="attend-only-fields">
@@ -765,6 +780,74 @@
       Maybe: { emoji: '\uD83E\uDD17', title: "Thanks for letting us know!", body: "We've got you down as a maybe. Hope you can make it \u2014 update anytime before July 5! \uD83E\uDD8B", confetti: false }
     };
 
+    // === Field validation ===
+    function showFieldError(inputName, errorId, msg) {
+      const input = form.querySelector('[name="' + inputName + '"]');
+      const err = document.getElementById(errorId);
+      if (input) input.classList.add('invalid');
+      if (err) {
+        if (msg) err.textContent = msg;
+        err.style.display = 'block';
+      }
+    }
+    function clearFieldError(inputName, errorId) {
+      const input = form.querySelector('[name="' + inputName + '"]');
+      const err = document.getElementById(errorId);
+      if (input) input.classList.remove('invalid');
+      if (err) err.style.display = 'none';
+    }
+
+    function validateFields() {
+      let ok = true;
+      let firstBad = null;
+
+      // Name — required, real text (min 2 non-space chars)
+      const nameVal = form.querySelector('[name="Name"]').value.trim();
+      if (nameVal.length < 2) {
+        showFieldError('Name', 'name-error', 'Please enter your name');
+        ok = false; firstBad = firstBad || 'Name';
+      } else {
+        clearFieldError('Name', 'name-error');
+      }
+
+      // Phone — required, must be a 10-digit US number (no +, no country code)
+      const phoneRaw = form.querySelector('[name="Phone"]').value.trim();
+      const phoneDigits = phoneRaw.replace(/[^\d]/g, '');
+      if (/[+]/.test(phoneRaw)) {
+        showFieldError('Phone', 'phone-error', 'No +1 or country code — just the 10-digit number');
+        ok = false; firstBad = firstBad || 'Phone';
+      } else if (/[a-zA-Z]/.test(phoneRaw)) {
+        showFieldError('Phone', 'phone-error', 'Numbers only, please');
+        ok = false; firstBad = firstBad || 'Phone';
+      } else if (phoneDigits.length !== 10) {
+        showFieldError('Phone', 'phone-error', 'Enter a 10-digit US number (e.g. 408 555 1234)');
+        ok = false; firstBad = firstBad || 'Phone';
+      } else {
+        clearFieldError('Phone', 'phone-error');
+      }
+
+      // Email — optional, but if filled must be valid
+      const emailVal = form.querySelector('[name="Email"]').value.trim();
+      if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        showFieldError('Email', 'email-error', 'Please enter a valid email address');
+        ok = false; firstBad = firstBad || 'Email';
+      } else {
+        clearFieldError('Email', 'email-error');
+      }
+
+      if (!ok && firstBad) {
+        const el = form.querySelector('[name="' + firstBad + '"]');
+        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus({ preventScroll: true }); }
+      }
+      return ok;
+    }
+
+    // Clear a field's error as soon as the guest edits it
+    [['Name','name-error'],['Phone','phone-error'],['Email','email-error']].forEach(function(pair) {
+      const input = form.querySelector('[name="' + pair[0] + '"]');
+      if (input) input.addEventListener('input', function(){ clearFieldError(pair[0], pair[1]); });
+    });
+
     form.addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -775,6 +858,11 @@
         return;
       }
       if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      // Custom field validation — keep bad data out of the sheet
+      if (!validateFields()) {
+        return;
+      }
 
       btn.disabled = true;
       btnText.style.display = 'none';
