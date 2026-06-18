@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Saanvi's 1st Birthday 🦋</title>
+
+  <!-- Open Graph for WhatsApp / social previews -->
+  <meta property="og:title" content="You're Invited! Saanvi's 1st Birthday 🦋" />
+  <meta property="og:description" content="Join us to celebrate Saanvi turning ONE! July 11, 2026 at 5:30 PM" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://shravanpn7.github.io/saanvi-turns-one/og-image.webp" />
+  <meta property="og:url" content="https://shravanpn7.github.io/saanvi-turns-one/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#E8D5F5" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- Google Fonts — minimal set -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #9B59B6;
+      --purple-deep: #7D3C98;
+      --purple-light: #E8D5F5;
+      --pink: #E091C0;
+      --pink-light: #F5DFEe;
+      --gold: #D4A853;
+      --bg: #FBF5FF;
+      --bg-card: #FFFFFF;
+      --text: #2E2435;
+      --text-mid: #5B4868;
+      --text-light: #8B7698;
+      --radius: 16px;
+      --shadow: 0 2px 20px rgba(155,89,182,0.10);
+      --shadow-lg: 0 8px 40px rgba(155,89,182,0.15);
+    }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    /* ===== HERO — invite image is the star ===== */
+    .hero {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 12px 0;
+    }
+
+    .hero img {
+      width: 100%;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      display: block;
+    }
+
+    /* ===== COUNTDOWN — subtle, under the image ===== */
+    .countdown {
+      max-width: 480px;
+      margin: 20px auto 0;
+      padding: 0 12px;
+    }
+
+    .countdown-inner {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .cd-unit {
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .cd-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--purple-deep);
+      line-height: 1;
+    }
+
+    .cd-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* ===== DETAILS CARD ===== */
+    .details {
+      max-width: 480px;
+      margin: 20px auto 0;
+      padding: 0 12px;
+    }
+
+    .details-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .details-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--purple-deep);
+      margin-bottom: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--purple-light);
+      text-align: left;
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+
+    .detail-icon {
+      font-size: 1.3rem;
+      width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    .detail-text strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .detail-text span {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+
+    .detail-text a {
+      color: var(--purple);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .detail-text a:active { opacity: 0.7; }
+
+    .maps-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 10px 20px;
+      background: var(--purple-light);
+      color: var(--purple-deep);
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .maps-btn:active { background: #d9c0f0; }
+
+    /* ===== RSVP SECTION ===== */
+    .rsvp {
+      max-width: 480px;
+      margin: 20px auto 0;
+      padding: 0 12px 100px;
+    }
+
+    .rsvp-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .rsvp-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--purple-deep);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .rsvp-subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group label .opt {
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--text-light);
+      font-size: 0.75rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--purple-light);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 16px; /* prevents iOS zoom */
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--purple);
+      background: white;
+    }
+
+    .form-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B7698' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .form-row .form-group { flex: 1; }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: white;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 15px rgba(155,89,182,0.3);
+      margin-top: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(155,89,182,0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      transform: none;
+    }
+
+    .no-gifts-note {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--purple-light);
+      border-radius: 12px;
+      line-height: 1.5;
+    }
+
+    .field-hint {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 4px;
+      padding-left: 2px;
+    }
+
+    .submit-btn .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Success state */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-msg .check {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .success-msg h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--purple-deep);
+      margin-bottom: 8px;
+    }
+
+    .success-msg p {
+      color: var(--text-mid);
+      font-size: 0.9rem;
+    }
+
+    .resubmit-note {
+      font-size: 0.8rem !important;
+      color: var(--text-light) !important;
+      margin-top: 12px;
+    }
+
+    /* Floating RSVP button */
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 36px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 100px;
+      box-shadow: 0 4px 20px rgba(155,89,182,0.4);
+      cursor: pointer;
+      z-index: 100;
+      transition: transform 0.15s, opacity 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .fab:active { transform: translateX(-50%) scale(0.95); }
+    .fab.hidden { opacity: 0; pointer-events: none; }
+
+    /* Confetti */
+    .confetti-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    @keyframes confettiDrop {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 0 12px 120px;
+      max-width: 480px;
+      margin: 20px auto 0;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .footer .hearts { color: var(--pink); }
+
+    .vibe-coded {
+      font-size: 0.65rem !important;
+      opacity: 0.5;
+      margin-top: 8px !important;
+    }
+    .vibe-coded a {
+      color: var(--text-light);
+      text-decoration: underline;
+    }
+
+    /* RSVP deadline badge */
+    .deadline-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--purple-light), var(--pink-light));
+      color: var(--purple-deep);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    /* Add to calendar */
+    .cal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 8px 16px;
+      background: var(--bg);
+      border: 1.5px solid var(--purple-light);
+      color: var(--purple);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .cal-link:active { background: var(--purple-light); }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HERO IMAGE ===== -->
+  <section class="hero">
+    <!-- SWAP INVITE IMAGE: Replace invite.webp with your custom design -->
+    <img src="invite.webp" alt="Saanvi's 1st Birthday — You're Invited!" />
+  </section>
+
+  <!-- ===== COUNTDOWN ===== -->
+  <section class="countdown">
+    <div class="countdown-inner" id="countdown">
+      <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-label">Days</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-label">Hours</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-label">Mins</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-label">Secs</div></div>
+    </div>
+  </section>
+
+  <!-- ===== DETAILS ===== -->
+  <section class="details">
+    <div class="details-card">
+      <h2>🦋 Event Details</h2>
+
+      <div class="detail-row">
+        <div class="detail-icon">📅</div>
+        <div class="detail-text">
+          <strong>Saturday, July 11, 2026</strong>
+          <span>5:30 PM onwards</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-icon">📍</div>
+        <div class="detail-text">
+          <strong>Almaden Community Center</strong>
+          <span>6445 Camden Ave, San Jose, CA 95120</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-icon">👨‍👩‍👧</div>
+        <div class="detail-text">
+          <strong>Hosted by</strong>
+          <span>Shravan & Alekhya</span>
+        </div>
+      </div>
+
+      <a class="maps-btn" href="https://maps.google.com/?q=Almaden+Community+Center+6445+Camden+Ave+San+Jose+CA+95120" target="_blank" rel="noopener">
+        📍 Open in Maps
+      </a>
+
+      <br/>
+      <a class="cal-link" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Saanvi%27s+1st+Birthday+Party&dates=20260711T173000/20260711T213000&location=Almaden+Community+Center%2C+6445+Camden+Ave%2C+San+Jose%2C+CA+95120&details=Join+us+to+celebrate+Saanvi+turning+ONE!" target="_blank" rel="noopener">
+        🗓 Add to Calendar
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== RSVP ===== -->
+  <section class="rsvp" id="rsvp">
+    <div class="rsvp-card">
+      <h2>RSVP</h2>
+      <p class="rsvp-subtitle">We'd love to celebrate with you!</p>
+      <div class="deadline-badge">Please respond by July 5, 2026</div>
+
+      <form id="rsvp-form">
+        <!-- Form data sent as JSON to Google Apps Script -->
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="Name" required placeholder="Your name" autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label>Email <span class="opt">(optional, for reminder)</span></label>
+          <input type="email" name="Email" placeholder="you@email.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label>Phone / WhatsApp</label>
+          <input type="tel" name="Phone" required placeholder="+1 (555) 123-4567" autocomplete="tel">
+          <span class="field-hint">We'll send reminders via WhatsApp</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Adults</label>
+            <select name="Adults" required>
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Kids</label>
+            <select name="Kids">
+              <option value="0">0</option>
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4+</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Dietary Needs <span class="opt">(optional)</span></label>
+          <input type="text" name="Dietary" placeholder="Allergies, vegetarian, etc.">
+        </div>
+
+        <div class="form-group">
+          <label>Message for Saanvi 💌 <span class="opt">(optional)</span></label>
+          <textarea name="Message" placeholder="Birthday wishes..."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span class="btn-text">Send RSVP 🦋</span>
+          <span class="spinner"></span>
+        </button>
+
+        <p class="no-gifts-note">🎁 No gifts please — just your love, blessings, and warm wishes! 💛</p>
+      </form>
+
+      <div class="success-msg" id="success-msg">
+        <div class="check">🎉</div>
+        <h3>You're on the list!</h3>
+        <p>Thank you! We can't wait to celebrate Saanvi's special day with you! 🦋</p>
+        <p class="resubmit-note">Need to update your RSVP? Just submit the form again or text us.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <p>Made with <span class="hearts">❤️</span> by Shravan & Alekhya</p>
+    <p class="vibe-coded">✨ vibe coded with an OpenClaw-like agent + Claude Opus</p>
+  </div>
+
+  <!-- Floating RSVP button -->
+  <button class="fab" id="fab" onclick="document.getElementById('rsvp').scrollIntoView({behavior:'smooth'})">
+    RSVP Now 🦋
+  </button>
+
+  <!-- Confetti container -->
+  <div class="confetti-container" id="confetti"></div>
+
+  <script>
+    // === Countdown ===
+    const party = new Date('2026-07-11T17:30:00-07:00').getTime();
+    function tick() {
+      const d = party - Date.now();
+      if (d <= 0) {
+        document.getElementById('countdown').innerHTML = '<p style="color:var(--purple-deep);font-weight:600;padding:8px;">🎉 Today is the day!</p>';
+        return;
+      }
+      document.getElementById('cd-d').textContent = Math.floor(d/86400000);
+      document.getElementById('cd-h').textContent = Math.floor((d%86400000)/3600000);
+      document.getElementById('cd-m').textContent = Math.floor((d%3600000)/60000);
+      document.getElementById('cd-s').textContent = Math.floor((d%60000)/1000);
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    // === FAB visibility — hide when RSVP section is in view ===
+    const fab = document.getElementById('fab');
+    const rsvpSection = document.getElementById('rsvp');
+    const successMsg = document.getElementById('success-msg');
+
+    const fabObserver = new IntersectionObserver(([e]) => {
+      fab.classList.toggle('hidden', e.isIntersecting);
+    }, { threshold: 0.15 });
+    fabObserver.observe(rsvpSection);
+
+    // === Form submission ===
+    const form = document.getElementById('rsvp-form');
+    const btn = document.getElementById('submit-btn');
+
+    // Google Apps Script endpoint
+    const _ep = 'https://script.google.com/macros/s/AKfycbywzltvc3_51GNVAFnN5D_fA049hU1MeG0Z37swrlUb-A7PDKP4L66H_xj_YVyhTxKgGQ/exec';
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      btn.disabled = true;
+      btn.querySelector('.btn-text').style.display = 'none';
+      btn.querySelector('.spinner').style.display = 'block';
+
+      // Collect form data as JSON (Apps Script expects JSON, not FormData)
+      const payload = {
+        Name: form.querySelector('[name="Name"]').value,
+        Phone: form.querySelector('[name="Phone"]').value,
+        Email: form.querySelector('[name="Email"]').value || '',
+        Adults: form.querySelector('[name="Adults"]').value,
+        Kids: form.querySelector('[name="Kids"]').value,
+        Dietary: form.querySelector('[name="Dietary"]').value || '',
+        Message: form.querySelector('[name="Message"]').value || ''
+      };
+
+      fetch(_ep, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        // no-cors returns opaque response, so we assume success
+        form.style.display = 'none';
+        document.querySelector('.deadline-badge').style.display = 'none';
+        document.querySelector('.rsvp-subtitle').style.display = 'none';
+        successMsg.style.display = 'block';
+        fab.classList.add('hidden');
+        launchConfetti();
+      })
+      .catch(() => {
+        alert('Something went wrong — please try again or text us directly!');
+        btn.disabled = false;
+        btn.querySelector('.btn-text').style.display = 'inline';
+        btn.querySelector('.spinner').style.display = 'none';
+      });
+    });
+
+    // === Confetti ===
+    function launchConfetti() {
+      const container = document.getElementById('confetti');
+      const colors = ['#9B59B6','#E091C0','#D4A853','#C78BDB','#F0D68A','#A855C0','#F5DFEe'];
+      for (let i = 0; i < 60; i++) {
+        const piece = document.createElement('div');
+        const size = Math.random() * 8 + 6;
+        piece.style.cssText = `
+          position:absolute;
+          width:${size}px; height:${size}px;
+          background:${colors[Math.floor(Math.random()*colors.length)]};
+          left:${Math.random()*100}%;
+          top:-20px;
+          border-radius:${Math.random()>0.5?'50%':'2px'};
+          animation: confettiDrop ${Math.random()*2+2}s linear ${Math.random()*0.5}s forwards;
+        `;
+        container.appendChild(piece);
+      }
+      setTimeout(() => container.innerHTML = '', 5000);
+    }
+  </script>
+</body>
+</html>
