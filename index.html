@@ -306,6 +306,70 @@
       transform: none;
     }
 
+    /* ===== Attendance selector ===== */
+    .attend-group {
+      margin-bottom: 22px;
+    }
+    .attend-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+    .attend-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .attend-opt {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--purple-light);
+      border-radius: 14px;
+      background: var(--bg);
+      color: var(--text-mid);
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s, transform 0.12s;
+      -webkit-tap-highlight-color: transparent;
+      text-align: left;
+    }
+    .attend-opt .emoji { font-size: 1.3rem; line-height: 1; }
+    .attend-opt:active { transform: scale(0.985); }
+    .attend-opt[aria-pressed="true"] {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(155,89,182,0.3);
+    }
+    .attend-opt[aria-pressed="true"].decline {
+      background: linear-gradient(135deg, #C9A24B, #D9B96A);
+      box-shadow: 0 4px 15px rgba(196,168,83,0.3);
+    }
+    .attend-opt[aria-pressed="true"].maybe {
+      background: linear-gradient(135deg, #B07BC9, #D0A0E0);
+      box-shadow: 0 4px 15px rgba(155,89,182,0.25);
+    }
+    .attend-error {
+      display: none;
+      text-align: center;
+      color: #C0392B;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+    /* fields that only matter when attending */
+    .attend-only { transition: opacity 0.2s; }
+    .attend-only.hidden { display: none; }
+
     .no-gifts-note {
       text-align: center;
       font-size: 0.85rem;
@@ -528,8 +592,25 @@
       <p class="rsvp-subtitle">We'd love to celebrate with you!</p>
       <div class="deadline-badge">Please respond by July 5, 2026</div>
 
+      <div class="attend-group">
+        <span class="attend-label">Will you join us?</span>
+        <div class="attend-options" id="attend-options">
+          <button type="button" class="attend-opt accept" data-value="Yes" aria-pressed="false">
+            <span class="emoji">🦋</span><span>Joyfully accepts!</span>
+          </button>
+          <button type="button" class="attend-opt decline" data-value="No" aria-pressed="false">
+            <span class="emoji">💛</span><span>Regretfully can't make it</span>
+          </button>
+          <button type="button" class="attend-opt maybe" data-value="Maybe" aria-pressed="false">
+            <span class="emoji">🤔</span><span>Maybe / not sure yet</span>
+          </button>
+        </div>
+        <p class="attend-error" id="attend-error">Please pick one so we know 💜</p>
+      </div>
+
       <form id="rsvp-form">
         <!-- Form data sent as JSON to Google Apps Script -->
+        <input type="hidden" name="Attendance" id="attendance-input" value="">
 
         <div class="form-group">
           <label>Full Name</label>
@@ -544,13 +625,14 @@
         <div class="form-group">
           <label>Phone / WhatsApp</label>
           <input type="tel" name="Phone" required placeholder="+1 (555) 123-4567" autocomplete="tel">
-          <span class="field-hint">We'll send reminders via WhatsApp</span>
+          <span class="field-hint" id="phone-hint">We'll send reminders via WhatsApp</span>
         </div>
 
+        <div class="attend-only hidden" id="attend-only-fields">
         <div class="form-row">
           <div class="form-group">
             <label>Adults</label>
-            <select name="Adults" required>
+            <select name="Adults">
               <option value="1">1</option>
               <option value="2" selected>2</option>
               <option value="3">3</option>
@@ -574,6 +656,12 @@
           <label>Dietary Needs <span class="opt">(optional)</span></label>
           <input type="text" name="Dietary" placeholder="Allergies, vegetarian, etc.">
         </div>
+        </div>
+
+        <div class="form-group">
+          <label>A Note for Us <span class="opt">(optional)</span></label>
+          <textarea name="Note" placeholder="Anything you'd like us to know..."></textarea>
+        </div>
 
         <div class="form-group">
           <label>Message for Saanvi 💌 <span class="opt">(optional)</span></label>
@@ -589,10 +677,10 @@
       </form>
 
       <div class="success-msg" id="success-msg">
-        <div class="check">🎉</div>
-        <h3>You're on the list!</h3>
-        <p>Thank you! We can't wait to celebrate Saanvi's special day with you! 🦋</p>
-        <p class="resubmit-note">Need to update your RSVP? Just submit the form again or text us.</p>
+        <div class="check" id="success-check">🎉</div>
+        <h3 id="success-title">You're on the list!</h3>
+        <p id="success-body">Thank you! We can't wait to celebrate Saanvi's special day with you! 🦋</p>
+        <p class="resubmit-note">Need to update your response? Just submit the form again or text us.</p>
       </div>
     </div>
   </section>
@@ -644,22 +732,66 @@
     // Google Apps Script endpoint
     const _ep = 'https://script.google.com/macros/s/AKfycbywzltvc3_51GNVAFnN5D_fA049hU1MeG0Z37swrlUb-A7PDKP4L66H_xj_YVyhTxKgGQ/exec';
 
+    // === Attendance selector (Accept / Decline / Maybe) ===
+    const attendInput = document.getElementById('attendance-input');
+    const attendOpts = Array.from(document.querySelectorAll('.attend-opt'));
+    const attendError = document.getElementById('attend-error');
+    const attendOnly = document.getElementById('attend-only-fields');
+    const btnText = btn.querySelector('.btn-text');
+
+    function applyAttendance(value) {
+      attendInput.value = value;
+      attendOpts.forEach(o => o.setAttribute('aria-pressed', o.dataset.value === value ? 'true' : 'false'));
+      attendError.style.display = 'none';
+      // Headcount + dietary only matter if attending; required only then
+      const attending = (value === 'Yes');
+      attendOnly.classList.toggle('hidden', !attending);
+      form.querySelector('[name="Adults"]').required = attending;
+      // No reminders for declines — hide the WhatsApp reminder hint
+      var phoneHint = document.getElementById('phone-hint');
+      if (phoneHint) phoneHint.style.display = (value === 'No') ? 'none' : 'block';
+      // Tailor the submit button label to the choice
+      if (value === 'Yes')      btnText.textContent = "Send RSVP \uD83E\uDD8B";
+      else if (value === 'No')  btnText.textContent = "Send Response \uD83D\uDC9B";
+      else if (value === 'Maybe') btnText.textContent = "Send Response \uD83E\uDD14";
+    }
+
+    attendOpts.forEach(o => o.addEventListener('click', () => applyAttendance(o.dataset.value)));
+
+    // Per-choice success copy
+    const successCopy = {
+      Yes:   { emoji: '\uD83C\uDF89', title: "You're on the list!", body: "Thank you! We can't wait to celebrate Saanvi's special day with you! \uD83E\uDD8B", confetti: true },
+      No:    { emoji: '\uD83D\uDC9B', title: "We'll miss you!", body: "Thank you for letting us know. We'll be thinking of you and sending love your way. \uD83E\uDD8B", confetti: false },
+      Maybe: { emoji: '\uD83E\uDD17', title: "Thanks for letting us know!", body: "We've got you down as a maybe. Hope you can make it \u2014 update anytime before July 5! \uD83E\uDD8B", confetti: false }
+    };
+
     form.addEventListener('submit', function(e) {
       e.preventDefault();
+
+      // Require an attendance choice first
+      if (!attendInput.value) {
+        attendError.style.display = 'block';
+        document.getElementById('attend-options').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
       if (!form.checkValidity()) { form.reportValidity(); return; }
 
       btn.disabled = true;
-      btn.querySelector('.btn-text').style.display = 'none';
+      btnText.style.display = 'none';
       btn.querySelector('.spinner').style.display = 'block';
+
+      const attending = (attendInput.value === 'Yes');
 
       // Collect form data as JSON (Apps Script expects JSON, not FormData)
       const payload = {
         Name: form.querySelector('[name="Name"]').value,
         Phone: form.querySelector('[name="Phone"]').value,
         Email: form.querySelector('[name="Email"]').value || '',
-        Adults: form.querySelector('[name="Adults"]').value,
-        Kids: form.querySelector('[name="Kids"]').value,
-        Dietary: form.querySelector('[name="Dietary"]').value || '',
+        Attendance: attendInput.value,
+        Adults: attending ? form.querySelector('[name="Adults"]').value : '0',
+        Kids: attending ? form.querySelector('[name="Kids"]').value : '0',
+        Dietary: attending ? (form.querySelector('[name="Dietary"]').value || '') : '',
+        Note: form.querySelector('[name="Note"]').value || '',
         Message: form.querySelector('[name="Message"]').value || ''
       };
 
@@ -671,17 +803,21 @@
       })
       .then(() => {
         // no-cors returns opaque response, so we assume success
+        const copy = successCopy[attendInput.value] || successCopy.Yes;
+        document.getElementById('success-check').textContent = copy.emoji;
+        document.getElementById('success-title').textContent = copy.title;
+        document.getElementById('success-body').innerHTML = copy.body;
         form.style.display = 'none';
         document.querySelector('.deadline-badge').style.display = 'none';
         document.querySelector('.rsvp-subtitle').style.display = 'none';
         successMsg.style.display = 'block';
         fab.classList.add('hidden');
-        launchConfetti();
+        if (copy.confetti) launchConfetti();
       })
       .catch(() => {
         alert('Something went wrong — please try again or text us directly!');
         btn.disabled = false;
-        btn.querySelector('.btn-text').style.display = 'inline';
+        btnText.style.display = 'inline';
         btn.querySelector('.spinner').style.display = 'none';
       });
     });
